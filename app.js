@@ -1,5 +1,8 @@
 ﻿const express = require('express')
+var cors = require('cors')
 const app = express()
+app.use(cors())
+
 const port = 3000
 const flights = require('./data/flights.js');
 
@@ -8,9 +11,11 @@ app.get('/', function(req, res){
 });
 
 
-app.get('/api/flights', function(req, res){
+app.get('/api/flights', cors(), function(req, res){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "GET", "POST", "PUT", "DELETE");
+
   var response = [];
     response = flights.filter(function(flightDetail){
       if((flightDetail.flightNumber == req.query.fNumber || (flightDetail.origin == req.query.origin && flightDetail.destination == req.query.destination)) 
@@ -22,4 +27,4 @@ app.get('/api/flights', function(req, res){
   res.send(response);
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`App listening on port ${port}!`))
